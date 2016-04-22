@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN cd $HOME
+MAINTAINER Ryosuke Horie
 
 # Install sudo
 RUN apt-get update \
@@ -18,15 +18,16 @@ RUN sudo apt-get -y install software-properties-common \
 
 # Download Android SDK
 RUN sudo apt-get -y install wget \
+  && cd /usr/local \
   && wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
-  && tar zxvf android-sdk_r24.4.1-linux.tgz
+  && tar zxvf android-sdk_r24.4.1-linux.tgz \
+  && rm -rf /usr/local/android-sdk_r24.4.1-linux.tgz
 
-# Set ANDROID_HOME
-RUN export ANDROID_HOME=$HOME/android-sdk-linux
+# Environment variables
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV ANDROID_HOME /usr/local/android-sdk-linux
+ENV PATH $ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH
 
-# Set PATH
-RUN export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH
-
-# Update Android SDK
-RUN android update sdk --no-ui --all --filter "android-23,build-tools-23.0.3,extra-google-m2repository,extra-android-m2repository" 
-
+# Update of Android SDK
+RUN echo y | android update sdk --no-ui --all --filter "android-23,build-tools-23.0.3" \
+  && echo y | android update sdk --no-ui --all --filter "extra-google-m2repository,extra-android-m2repository"
