@@ -9,6 +9,9 @@ RUN apt-get update \
   && apt-get -y install sudo \
   && useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 
+# Install 32bit lib
+RUN sudo apt-get -y install lib32stdc++6 lib32z1
+
 # Install Java8
 RUN sudo apt-get -y install software-properties-common \
   && sudo add-apt-repository -y ppa:webupd8team/java \
