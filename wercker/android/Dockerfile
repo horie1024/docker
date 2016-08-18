@@ -13,11 +13,10 @@ RUN apt-get update \
 RUN sudo apt-get -y install lib32stdc++6 lib32z1
 
 # Install Java8
-RUN sudo apt-get -y install software-properties-common \
-  && sudo add-apt-repository -y ppa:webupd8team/java \
-  && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
-  && sudo apt-get -y update \
-  && sudo apt-get -y install oracle-java8-installer
+RUN apt-get install -y software-properties-common curl \
+    && add-apt-repository -y ppa:openjdk-r/ppa \
+    && apt-get update \
+    && apt-get install -y openjdk-8-jdk
 
 # Download Android SDK
 RUN sudo apt-get -y install wget \
@@ -27,7 +26,7 @@ RUN sudo apt-get -y install wget \
   && rm -rf /usr/local/android-sdk_r24.4.1-linux.tgz
 
 # Environment variables
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH $ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH
 
